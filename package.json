@@ -1,12 +1,17 @@
 {
-  "name": "execa-scratch",
+  "name": "containr-scratch",
   "version": "1.0.0",
-  "main": "index.js",
+  "exports": "./src/index.js",
   "type": "module",
   "scripts": {
-    "start": "DEBUG=dbg:* IS_LOCAL=true OCI_IMAGE=ttl.sh/oci-scratch:1.0.0 node src/index.js",
+    "start": "node --env-file=.env src/index.js",
+    "watch": "node --env-file=.env --watch-path . src/index.js",
     "pretest": "npx xo",
-    "test": "DEBUG=app:*,test:* npx ava"
+    "test": "DEBUG=app:*,test:* npx ava",
+    "dev-container": "docker compose up --build",
+    "test-container": "docker build -t containr-scratch --progress=plain --target=test .",
+    "lock": "docker build -t containr-scratch --target lock --output type=local,dest=. .",
+    "build": "docker build -t containr-scratch:${npm_config_tag} --progress=plain --target=prod ."
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +26,7 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "ava": "^6.2.0",
     "prettier": "^3.4.2",
     "xo": "^0.60.0"
   }
