@@ -1,0 +1,27 @@
+{
+  "name": "execa-scratch",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "DEBUG=dbg:* IS_LOCAL=true OCI_IMAGE=ttl.sh/oci-scratch:1.0.0 node src/index.js",
+    "pretest": "npx xo",
+    "test": "DEBUG=app:*,test:* npx ava"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@watchmen/containr": "^1.0.3",
+    "@watchmen/debug": "^2.0.8",
+    "config": "^3.3.12",
+    "debug": "^4.4.0",
+    "execa": "^9.5.2",
+    "fs-extra": "^11.2.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "xo": "^0.60.0"
+  }
+}
