@@ -1,7 +1,9 @@
-import debug from '@watchmen/debug'
+import assert from 'node:assert'
 import config from 'config'
 import _ from 'lodash'
-import {withImages, withContainer} from '@watchmen/containr'
+import debug from '@watchmen/debug'
+import {withImages} from '@watchmen/containr'
+import {stringify} from '@watchmen/helpr'
 import {initWorkDir, getUid} from '@watchmen/containr/util'
 import {pullOci} from '@watchmen/containr/oci'
 
@@ -27,14 +29,25 @@ async function main() {
       }),
     },
 
-    async closure(containers) {
-      dbg('closure: containers=%o', containers)
-      const {stdout} = await withContainer({
-        container: containers.gcloud,
+    async closure(withContainer) {
+      const image = 'gcloud'
+      const withGcloud = (args) => withContainer({...args, image})
+
+      const which = await withGcloud({input: 'which gcloud'})
+      dbg('which=%s', which)
+      assert(which, 'gcloud binary should b on path')
+
+      const oci = await withGcloud({input: 'ls -la work/work/scratch.txt'})
+      dbg('oci=%s', stringify(oci))
+      assert(oci, 'oci files should b found')
+
+      const {stdout, stderr} = await withGcloud({
         input: 'gcloud auth list',
-        isLines: true,
+        // don't throw on error here as this is expected to fail when not authenticated locally
+        // so in this case just capture stdout and stderr and dump to console
+        throwOnError: false,
       })
-      dbg('out=%o', stdout)
+      dbg('out=%o, err=%o', stdout, stderr)
     },
   })
 }
