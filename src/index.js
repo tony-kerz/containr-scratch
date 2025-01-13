@@ -4,13 +4,13 @@ import _ from 'lodash'
 import debug from '@watchmen/debug'
 import {withImages} from '@watchmen/containr'
 import {stringify} from '@watchmen/helpr'
-import {initWorkDir, getUid} from '@watchmen/containr/util'
+import {getUid} from '@watchmen/containr/util'
 import {pullOci} from '@watchmen/containr/oci'
 
 const dbg = debug(import.meta.url)
 
 async function main() {
-  await initWorkDir()
+  // wait initWorkDir()
 
   const uid = await getUid()
 
@@ -37,7 +37,7 @@ async function main() {
       dbg('which=%s', which)
       assert(which, 'gcloud binary should b on path')
 
-      const oci = await withGcloud({input: 'ls -la work/work/scratch.txt'})
+      const oci = await withGcloud({input: 'ls -la scratch.txt'})
       dbg('oci=%s', stringify(oci))
       assert(oci, 'oci files should b found')
 

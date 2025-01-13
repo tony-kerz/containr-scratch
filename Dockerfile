@@ -16,7 +16,6 @@ ENV entrypoint=$entrypoint
 ENV appPath=/app
 WORKDIR $appPath
 
-
 ARG cmd=src/index.js
 ENV cmd=$cmd
 
@@ -26,7 +25,6 @@ COPY . .
 FROM base AS dev
 RUN \
     npm install --include=dev
-
 CMD npm run dev
 
 # https://stackoverflow.com/a/58752370
@@ -35,14 +33,17 @@ FROM scratch AS lock
 COPY --from=dev /app/package-lock.json package-lock.json
 
 #
-FROM base AS test 
-ENV NODE_ENV=test 
+FROM base AS test
+ARG testParams=''
+ENV testParams=$testParams
+ENV NODE_ENV=test
 RUN \
     npm ci --include=dev &&\
-    npm test
+    chmod 777 node_modules ${appPath}
+CMD ["sh", "-c", "npm test"]
 
 #
 FROM base AS prod
 RUN npm ci --omit=dev
 
-CMD $entrypoint $cmd
+CMD ["sh", "-c", "${entrypoint} ${cmd}"]

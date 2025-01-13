@@ -3,3 +3,4 @@ config/local.*
 node_modules
 work
 .github
+.git
