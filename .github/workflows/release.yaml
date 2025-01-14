@@ -16,8 +16,9 @@ jobs:
       #  with:
       #    node-version: latest
       #    registry-url: https://registry.npmjs.org
-      # embedded in test-container script
-      #- run: npm ci
+      - run: sudo chmod o+rw /var/run/docker.sock
       - run: npm run test-container
-      - run: npm run build --tag=$(git rev-parse --short HEAD)
-        if: github.event_name == 'release'
+      - if: github.event_name == 'release'
+        run: |
+          npm run build-container
+          npm run run-container
