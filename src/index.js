@@ -4,19 +4,19 @@ import _ from 'lodash'
 import debug from '@watchmen/debug'
 import {withImages} from '@watchmen/containr'
 import {stringify} from '@watchmen/helpr'
-import {getUid} from '@watchmen/containr/util'
+import {getUid, initHostWork} from '@watchmen/containr/util'
 import {pullOci} from '@watchmen/containr/oci'
 
 const dbg = debug(import.meta.url)
 
 async function main() {
-  // wait initWorkDir()
+  await initHostWork()
 
   const uid = await getUid()
 
   await pullOci({image: process.env.OCI_IMAGE, user: uid})
 
-  const images = _.omit(config.images, ['oras'])
+  const images = _.omit(config.containr.images, ['oras'])
 
   dbg('images=%o', images)
 

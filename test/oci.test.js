@@ -8,7 +8,7 @@ import {getUid, getHostWork, initHostWork} from '@watchmen/containr/util'
 const dbg = debug(import.meta.url)
 
 test.beforeEach(async () => {
-  await initHostWork(true)
+  await initHostWork()
 })
 
 test('push-oci: basic', async (t) => {

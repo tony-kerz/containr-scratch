@@ -28,13 +28,13 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@watchmen/containr": "^1.0.6",
+    "@watchmen/containr": "^1.0.8",
     "@watchmen/debug": "^2.0.8",
     "@watchmen/helpr": "^3.0.0",
     "config": "^3.3.12",
     "debug": "^4.4.0",
     "execa": "^9.5.2",
-    "fs-extra": "^11.2.0",
+    "fs-extra": "^11.3.0",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
