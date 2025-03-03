@@ -9,4 +9,5 @@ module.exports = {
       isInit: false,
     },
   },
+  isWriteMode: true,
 }

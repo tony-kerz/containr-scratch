@@ -3,7 +3,7 @@ import {configr} from '@watchmen/configr'
 import _ from 'lodash'
 import debug from '@watchmen/debug'
 import {withImages} from '@watchmen/containr'
-import {getPackage, pretty} from '@watchmen/helpr'
+import {getPackage, pretty, parseBoolean} from '@watchmen/helpr'
 import {
   getUid,
   initWork,
@@ -18,7 +18,17 @@ async function main() {
   const pack = await getPackage()
   dbg('package.version=%s', pack.version)
 
-  await initWork()
+  const cWork = getContainerWork()
+
+  if (parseBoolean(configr.isWriteMode)) {
+    process.env.CONTAINR_WORK_IS_INIT = true
+    await initWork()
+    // try to write something
+    //
+    await $`touch ${cWork}/sumthin.txt`
+  } else {
+    dbg('read-mode')
+  }
 
   const uid = await getUid()
   dbg('uid=%s', uid)
@@ -34,7 +44,6 @@ async function main() {
   const {stdout: lsla} = await $({lines: true})`ls -la`
   dbg('ls-la=%s', pretty(lsla))
 
-  const cWork = getContainerWork()
   const {stdout: lslaWork} = await $({lines: true})`ls -la ${cWork}`
   dbg('ls-la-cwork=%s', pretty(lslaWork))
 
@@ -43,8 +52,8 @@ async function main() {
     images,
 
     async closure(withContainer) {
-      const ls = await withContainer({image: 'ubuntu', input: 'ls -lad'})
-      dbg('ls=%s', ls)
+      const ls = await withContainer({image: 'ubuntu', input: 'ls -la'})
+      dbg('ls=%s', pretty(ls))
     },
   })
 }
