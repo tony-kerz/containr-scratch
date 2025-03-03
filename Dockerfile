@@ -18,7 +18,7 @@ ENV appPath=/app
 ENV PACKAGE_PATH=$appPath
 WORKDIR $appPath
 
-ARG cmd=${appPath}/src/index.js
+ARG cmd=$appPath/src/index.js
 ENV cmd=$cmd
 
 COPY . .
@@ -41,13 +41,13 @@ ENV testParams=$testParams
 ENV NODE_ENV=test
 RUN \
     npm ci --include=dev &&\
-    chmod 777 node_modules ${appPath}
+    chmod 777 node_modules $appPath
 CMD ["sh", "-c", "npm test"]
 
 #
 FROM base AS prod
 RUN npm ci --omit=dev
 
-ENV NODE_CONFIG_DIR=${appPath}/config
+ENV NODE_CONFIG_DIR=$appPath/config
 
 CMD ["sh", "-c", "${entrypoint} ${cmd}"]
