@@ -3,8 +3,13 @@ import {configr} from '@watchmen/configr'
 import _ from 'lodash'
 import debug from '@watchmen/debug'
 import {withImages} from '@watchmen/containr'
-import {getPackage} from '@watchmen/helpr'
-import {getUid, initWork, getHostWork} from '@watchmen/containr/util'
+import {getPackage, pretty} from '@watchmen/helpr'
+import {
+  getUid,
+  initWork,
+  getHostWork,
+  getContainerWork,
+} from '@watchmen/containr/util'
 import {$} from 'execa'
 
 const dbg = debug(import.meta.url)
@@ -21,10 +26,17 @@ async function main() {
   const {stdout: pwd} = await $`pwd`
   dbg('pwd=%s', pwd)
 
-  const {stdout: ls} = await $`ls -lad`
-  dbg('ls=%s', ls)
+  const {stdout: lslad} = await $`ls -lad`
+  dbg('ls-lad=%s', lslad)
 
   dbg('work=%s', getHostWork())
+
+  const {stdout: lsla} = await $({lines: true})`ls -la`
+  dbg('ls-la=%s', pretty(lsla))
+
+  const cWork = getContainerWork()
+  const {stdout: lslaWork} = await $({lines: true})`ls -la ${cWork}`
+  dbg('ls-la-cwork=%s', pretty(lslaWork))
 
   const images = configr.containr.images
   await withImages({
